@@ -1,0 +1,8 @@
+{
+  "name": "SeeYaa-app",
+  "version": "0.1.0",
+  "dependencies": {
+    "express": "^4.6.1",
+    "mongoose": "^3.8.12"
+  }
+}

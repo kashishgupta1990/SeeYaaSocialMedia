@@ -1,0 +1,8 @@
+{
+    "dbHost": "localhost",
+    "dbPort": "27017",
+    "dbName":"seeyaa",
+    "dbCollection":"user",
+    "nodeHost": "localhost",
+    "nodePort": "9999"
+}
