@@ -4,5 +4,5 @@
     "dbName":"seeyaa",
     "dbCollection":"user",
     "nodeHost": "localhost",
-    "nodePort": "9999"
+    "nodePort": "9090"
 }

@@ -25,48 +25,48 @@ Source.once("open", function () {
     console.log("Source DB Connected ");
 });
 
-/*module.exports.insertUser =*/
-function insertUser(UserObject, callback) {
-    var obj = new UserModel(UserObject);
-    obj.save(function (err) {
-        callback(err, "User Saved");
-    });
-};
+module.exports.insertUser =
+    function insertUser(UserObject, callback) {
+        var obj = new UserModel(UserObject);
+        obj.save(function (err) {
+            callback(err, "User Saved");
+        });
+    };
 
-/*module.exports.getUser =*/
-function getUser(condition, callback) {
-    UserModel.find(condition, {__v: 0}).exec(function (err, result) {
-        callback(err, result);
-    });
-};
+module.exports.getUser =
+    function getUser(condition, callback) {
+        UserModel.find(condition, {__v: 0}).exec(function (err, result) {
+            callback(err, result);
+        });
+    };
 
-/*module.exports.deleteUser =*/
-function deleteUser(id, callback) {
-    UserModel.find({_id: id}).remove().exec(function (err) {
-        callback(err, "User Deleted");
-    })
-};
+module.exports.deleteUser =
+    function deleteUser(id, callback) {
+        UserModel.find({_id: id}).remove().exec(function (err) {
+            callback(err, "User Deleted");
+        })
+    };
 
-/*module.exports.updateUser =*/
-function updateUser(id, obj, callback) {
-    UserModel.update({_id: id}, {$set: obj}, function (err, result) {
-        callback(err, "Record Updated " + result);
-    })
-};
+module.exports.updateUser =
+    function updateUser(id, obj, callback) {
+        UserModel.update({_id: id}, {$set: obj}, function (err, result) {
+            callback(err, "Record Updated " + result);
+        })
+    };
 
 
 /*updateUser('53c3a21e499dc7c423e90e02', {
-    fullname: "Kashish Kumar Gupta"
-}, function (err, result) {
-    console.log(err + result);
-});*/
+ fullname: "Kashish Kumar Gupta"
+ }, function (err, result) {
+ console.log(err + result);
+ });*/
 
 
 /*
-deleteUser("53c3a21e499dc7c423e90e02", function (err, result) {
-    console.log(result);
-});
-*/
+ deleteUser("53c3a21e499dc7c423e90e02", function (err, result) {
+ console.log(result);
+ });
+ */
 
 
 /*insertUser({
