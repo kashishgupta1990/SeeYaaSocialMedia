@@ -81,8 +81,8 @@ app.get('/signupconformation/:id', function (req, res) {
                     config.mail.password,
                     sentList,
                     "Welcome To See Yaa Social Network Site",
-                        "Your EmailId: " + config.mail.emailId + " Password: " + obj.password,
-                        "Your EmailId: " + config.mail.emailId + " Password: " + obj.password);
+                        "Your EmailId: " + result[0].email + " Password: " + obj.password,
+                        "Your EmailId: " + result[0].email + " Password: " + obj.password);
 
                 res.send("Your Account Activated Successfully. Please Check Your Mail For ID and Password");
             });
