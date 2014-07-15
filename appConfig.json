@@ -4,5 +4,6 @@
     "dbName":"seeyaa",
     "dbCollection":"user",
     "nodeHost": "localhost",
-    "nodePort": "9090"
+    "nodePort": "9090",
+    "mail":{"emailId":"guptkashish@gmail.com","password":"#spiderman2#"}
 }

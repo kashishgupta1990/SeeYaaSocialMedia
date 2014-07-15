@@ -8,8 +8,8 @@ Source.on("error", function (err) {
 });
 
 var UserSchema = mongoose.Schema({
-    username: {type: String, unique: true, required: true},
-    password: {type: String, unique: true, required: true},
+    email: {type: String, unique: true},
+    password: {type: String, unique: true},
     imgurl: {type: String, required: true},
     fullname: String,
     sex: String,

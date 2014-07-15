@@ -1,6 +1,6 @@
 [
     {
-        username:"kashishgupta1990",
+        email:"kashishgupta1990@yahoo.com",
         password:"#sssleelel#",
         imgurl:"/image/profileid.jpg",
         fullname:"Kashish Gupta",
