@@ -3,11 +3,11 @@ var myApp = angular.module('myApp', ['ngRoute']);
 myApp.config(function ($routeProvider) {
     $routeProvider
 
-        .when('/', {
+        .when('/home', {
             templateUrl: 'view/login.html',
             controller: 'loginController'
         })
-        .when('/home', {
+        .when('/', {
             templateUrl: 'view/home.html',
             controller: 'homeController'
         })
@@ -19,10 +19,45 @@ myApp.config(function ($routeProvider) {
             templateUrl: 'view/form.html',
             controller: 'formController'
         })
+        .when('/profileedit',{
+            templateUrl:'view/profileedit.html',
+            controller:'profileEditController'
+        });
 });
 
+//Main Controller
+myApp.controller('mainController', ['$scope', '$http', '$location', function ($scope, $http, $location) {
+    console.log('I m Main Controller');
+
+    $scope.usersession = {
+        id: null,
+        email:"kashishgupta1990@yahoo.com",
+        password:"#sssleelel#",
+        imgurl:"img/53c511478381385b2cbe90d9.jpg",
+        fullname:"Kashish Gupta",
+        sex:"M",
+        age:"11-Oct-1990",
+        mobilenumber:"9999749722",
+        relationship:"Single",
+        status:true,
+        friends:['id1','id2','id3']
+    };
+
+    $scope.logout = function () {
+        $scope.usersession.id = null;
+    };
+
+    $scope.checkPermission = function () {
+        console.log($scope.usersession.id);
+        if ($scope.usersession.id == null) {
+            $location.path('/');
+        }
+    }
+
+}]);
+
 //Login Controller
-myApp.controller('loginController', ['$scope', '$http', function ($scope, $http) {
+myApp.controller('loginController', ['$scope', '$http', '$location', function ($scope, $http, $location) {
     console.log('i m in Login Controller');
 
     $scope.signupClick = function () {
@@ -37,21 +72,19 @@ myApp.controller('loginController', ['$scope', '$http', function ($scope, $http)
                 console.log(err);
             });
 
-    }
+    };
 
     $scope.logInClick = function () {
         console.log('LogIn Button Clicked');
 
-        console.log($scope.email);
-        console.log($scope.password);
-
         $http.post('/verifyAccount', {email: $scope.email, password: $scope.password})
             .success(function (result) {
-                console.log(result);
 
                 if (result != "Invalid User") {
                     console.log('Successfully Login');
-                    //$location.path('master.html');
+                    $scope.usersession.id = result;
+                    console.log($scope.usersession);
+                    $location.path('home');
                 }
                 else {
                     alert('Invalid User');
@@ -64,22 +97,35 @@ myApp.controller('loginController', ['$scope', '$http', function ($scope, $http)
     }
 }]);
 
-//Main Controller
-myApp.controller('mainController', ['$scope', '$http', function ($scope, $http) {
-    console.log('I m Main Controller');
-}]);
-
 //Home Controller
 myApp.controller('homeController', ['$scope', '$http', function ($scope, $http) {
     console.log('I m Home Controller');
+    $scope.checkPermission();
+
+    //Do Something here
+
 }]);
 
 //Chart Controller
 myApp.controller('chartController', ['$scope', '$http', function ($scope, $http) {
     console.log('I m Chart Controller');
+    $scope.checkPermission();
+
+    //Do Something here
 }]);
 
 //Form Controller
 myApp.controller('formController', ['$scope', '$http', function ($scope, $http) {
     console.log('I m form Controller');
+    $scope.checkPermission();
+
+    //Do Something here
+}]);
+
+//Profile Edit Controller
+myApp.controller('profileEditController', ['$scope', '$http', function ($scope, $http) {
+    console.log('I m Profile Edit Controller');
+    //$scope.checkPermission();
+
+    //Do Something here
 }]);

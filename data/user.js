@@ -9,7 +9,8 @@
         mobilenumber:"9999749722",
         relationship:"Single",
         status:true,
-        friends:['id1','id2','id3']
+        friends:['id1','id2','id3'],
+        posts:['id1','id2']
     },
     {
         username:"shubhamgupta",
@@ -21,6 +22,7 @@
         mobilenumber:"844749722",
         relationship:"Single",
         status:true,
-        friends:['id1','id2','id7']
+        friends:['id1','id2','id7'],
+        posts:['id1','id2']
     }
 ]
