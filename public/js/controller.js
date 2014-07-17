@@ -3,13 +3,17 @@ var myApp = angular.module('myApp', ['ngRoute']);
 myApp.config(function ($routeProvider) {
     $routeProvider
 
-        .when('/home', {
+        .when('/profileedit', {
             templateUrl: 'view/login.html',
             controller: 'loginController'
         })
-        .when('/', {
+        .when('/home', {
             templateUrl: 'view/home.html',
             controller: 'homeController'
+        })
+        .when('/changepassword', {
+            templateUrl: 'view/changePassword',
+            controller: 'changePasswordController'
         })
         .when('/chart', {
             templateUrl: 'view/chart.html',
@@ -19,9 +23,9 @@ myApp.config(function ($routeProvider) {
             templateUrl: 'view/form.html',
             controller: 'formController'
         })
-        .when('/profileedit',{
-            templateUrl:'view/profileedit.html',
-            controller:'profileEditController'
+        .when('/', {
+            templateUrl: 'view/profileedit.html',
+            controller: 'profileEditController'
         });
 });
 
@@ -29,27 +33,45 @@ myApp.config(function ($routeProvider) {
 myApp.controller('mainController', ['$scope', '$http', '$location', function ($scope, $http, $location) {
     console.log('I m Main Controller');
 
-    $scope.usersession = {
-        id: null,
-        email:"kashishgupta1990@yahoo.com",
-        password:"#sssleelel#",
-        imgurl:"img/53c511478381385b2cbe90d9.jpg",
-        fullname:"Kashish Gupta",
-        sex:"M",
-        age:"11-Oct-1990",
-        mobilenumber:"9999749722",
-        relationship:"Single",
-        status:true,
-        friends:['id1','id2','id3']
+
+    $scope.master = {};
+    $scope.master.usersession = {
+        _id: "53c66782f42108c74addeed2",
+        email: "rishbh.dixit123@gmail.com",
+        status: true,
+        imgurl: "img/find_user.png",
+        friends: [ ],
+        password: "1405511655740",
+        fullname: "Rishab",
+        sex: "M",
+        relationship: "Single",
+        mobilenumber: "99989889",
+        age: "89"
     };
+    /*$scope.master.usersession = {
+     _id: null,
+     imgurl: "/img/find_user.png",
+     fullname: "",
+     mobilenumber: "",
+     relationship: "",
+     status: true
+     };*/
 
     $scope.logout = function () {
-        $scope.usersession.id = null;
+        console.log('loging out event');
+        $scope.master.usersession = {
+            _id: null,
+            imgurl: "img/find_user.png",
+            fullname: "",
+            mobilenumber: "",
+            relationship: "",
+            status: true
+        };
     };
 
     $scope.checkPermission = function () {
-        console.log($scope.usersession.id);
-        if ($scope.usersession.id == null) {
+        console.log("Checking Permission " + $scope.master.usersession._id);
+        if ($scope.master.usersession._id == null) {
             $location.path('/');
         }
     }
@@ -79,11 +101,22 @@ myApp.controller('loginController', ['$scope', '$http', '$location', function ($
 
         $http.post('/verifyAccount', {email: $scope.email, password: $scope.password})
             .success(function (result) {
-
+                result = result.replace(/"/g, "");
                 if (result != "Invalid User") {
-                    console.log('Successfully Login');
-                    $scope.usersession.id = result;
-                    console.log($scope.usersession);
+
+                    $http.get('/user/' + result)
+                        .success(function (data) {
+                            console.log(data[0]);
+
+                            $scope.master.usersession = data[0];
+
+                            console.log($scope.master.usersession);
+                        })
+                        .error(function (err) {
+                            console.log(err);
+                        });
+
+                    console.log($scope.master.usersession);
                     $location.path('home');
                 }
                 else {
@@ -100,7 +133,8 @@ myApp.controller('loginController', ['$scope', '$http', '$location', function ($
 //Home Controller
 myApp.controller('homeController', ['$scope', '$http', function ($scope, $http) {
     console.log('I m Home Controller');
-    $scope.checkPermission();
+    console.log($scope.master.usersession);
+    // $scope.checkPermission();
 
     //Do Something here
 
@@ -109,7 +143,7 @@ myApp.controller('homeController', ['$scope', '$http', function ($scope, $http) 
 //Chart Controller
 myApp.controller('chartController', ['$scope', '$http', function ($scope, $http) {
     console.log('I m Chart Controller');
-    $scope.checkPermission();
+    // $scope.checkPermission();
 
     //Do Something here
 }]);
@@ -117,9 +151,16 @@ myApp.controller('chartController', ['$scope', '$http', function ($scope, $http)
 //Form Controller
 myApp.controller('formController', ['$scope', '$http', function ($scope, $http) {
     console.log('I m form Controller');
-    $scope.checkPermission();
+    //$scope.checkPermission();
 
     //Do Something here
+}]);
+
+//Change password Controller
+myApp.controller('changePasswordController', ['$scope', '$http', function ($scope, $http) {
+    console.log('I m Change Password');
+
+
 }]);
 
 //Profile Edit Controller
@@ -127,5 +168,16 @@ myApp.controller('profileEditController', ['$scope', '$http', function ($scope, 
     console.log('I m Profile Edit Controller');
     //$scope.checkPermission();
 
-    //Do Something here
+    $scope.profileupdate = function () {
+        console.log('Profile update button clicked');
+
+        console.log($scope.master.usersession);
+        $http.put('/user/' + $scope.master.usersession._id, $scope.master.usersession)
+            .success(function (data) {
+                console.log("result>> " + data);
+            })
+            .error(function (err) {
+                console.log("Error >>" + err);
+            });
+    };
 }]);

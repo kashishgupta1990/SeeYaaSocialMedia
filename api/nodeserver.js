@@ -4,6 +4,7 @@ var db = require('./mongoapi.js'),
     express = require('express'),
     app = express(),
     path = require('path'),
+    fs = require('fs'),
     bodyParser = require('body-parser');
 
 
@@ -22,7 +23,7 @@ var server = app.get('/', function (req, res) {
 app.post('/signuprequest', function (req, res) {
     var obj = req.body;
     obj["status"] = false;
-    obj["imgurl"] = "defaultProfile.jpg";
+    obj["imgurl"] = "img/find_user.png";
 
     db.insertUser(obj, function (err, data) {
         var sentList = [];
@@ -162,6 +163,12 @@ app.put('/user/:id', function (req, res) {
     var id = req.params.id;
     console.log(id);
     var obj = req.body;
+    console.log(obj);
+
+   /* fs.readFile(req.files.image.path, function (err, data) {
+        console.log(">>" + data);
+    });*/
+
     if (id) {
         //Only One Data
         db.updateUser(id, obj, function (err, resutl) {

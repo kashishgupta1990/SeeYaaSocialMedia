@@ -8,22 +8,22 @@
                 <form role="form">
                     <div class="form-group">
                         <label>Your Registered Email-Id</label>
-                        <label class="form-control">kashish@gmail.com</label>
+                        <label class="form-control">{{master.usersession.email}}</label>
                     </div>
                     <div class="form-group">
                         <label>Full Name</label>
-                        <input class="form-control" placeholder="Enter Your Name"/>
+                        <input ng-model="master.usersession.fullname" class="form-control" placeholder="Enter Your Name"/>
                     </div>
                     <div class="form-group">
                         <label>Gender</label>
-                        <select class="form-control">
+                        <select ng-model="master.usersession.sex" class="form-control">
                             <option value="M">Male</option>
                             <option value="F">Female</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label>Relationship Status</label>
-                        <select class="form-control">
+                        <select ng-model="master.usersession.relationship" class="form-control">
                             <option value="Single">Single</option>
                             <option value="Married">Married</option>
                             <option value="Committed">Committed</option>
@@ -38,19 +38,19 @@
                 <form role="form">
                     <div class="form-group">
                         <label>Age</label>
-                        <input class="form-control" placeholder="Enter Your Age"/>
+                        <input ng-model="master.usersession.age" class="form-control" placeholder="Enter Your Age"/>
                     </div>
                     <div class="form-group">
                         <label>Mobile Number</label>
-                        <input class="form-control" placeholder="Enter Your Mobile No."/>
+                        <input ng-model="master.usersession.mobilenumber" class="form-control" placeholder="Enter Your Mobile No."/>
                     </div>
-                    <div class="form-group">
+                   <!-- <div class="form-group">
                         <label>Upload Profile Picture</label>
                         <input type="file"/>
-                    </div>
+                    </div>-->
                     <br/>
                     <br/>
-                    <button type="submit" class="btn btn-success">Update Profile</button>
+                    <button type="submit" ng-click="profileupdate()" class="btn btn-success">Update Profile</button>
                 </form>
 
             </div>
