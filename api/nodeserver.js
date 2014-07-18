@@ -5,13 +5,17 @@ var db = require('./mongoapi.js'),
     app = express(),
     path = require('path'),
     fs = require('fs'),
-    bodyParser = require('body-parser');
+    bodyParser = require('body-parser'),
+    cookie = require('cookie-parser');
 
 
 app.use(express.static(path.join(__dirname + "/..", "public")));
 
 //Parsing Body
 app.use(bodyParser());
+
+//Active Cookie
+app.use(cookie());
 
 //REST API -------------------------------------------------------------------------
 //Static index.html Page is Running
@@ -210,6 +214,8 @@ app.post('/verifyAccount', function (req, res) {
                 res.send('Invalid User')
             }
             else {
+                console.log(data[0]._id);
+                res.cookie('_id',data[0]._id);
                 res.send(data[0]._id);
             }
         }

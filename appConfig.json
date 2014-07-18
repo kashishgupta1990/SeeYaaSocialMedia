@@ -5,5 +5,5 @@
     "dbCollection":"user",
     "nodeHost": "localhost",
     "nodePort": "9090",
-    "mail":{"emailId":"guptkashish@gmail.com","password":"#spiderman2#"}
+    "mail":{"emailId":"guptkashish@gmail.com","password":"##"}
 }
