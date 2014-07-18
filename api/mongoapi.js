@@ -16,8 +16,13 @@ var UserSchema = mongoose.Schema({
     age: String,
     mobilenumber: String,
     relationship: String,
-    status: {type: Boolean, required: true},
-    friends: [String] });
+    status: {type: Boolean, required: Boolean},
+    friends: [
+        {_id: {type: String, unique: Boolean}, status: Boolean}
+    ],
+    posts: [
+        {datetime: Date, title: String, description: String}
+    ]});
 
 var UserModel = Source.model(config.dbCollection, UserSchema);
 

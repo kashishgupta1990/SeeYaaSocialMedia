@@ -42,8 +42,8 @@ myApp.controller('mainController', ['$scope', '$http', '$location', function ($s
         friends: [ ],
         password: "",
         fullname: "",
-        sex: "",
-        relationship: "",
+        sex: "M",
+        relationship: "Single",
         mobilenumber: "",
         age: ""
     };
@@ -129,8 +129,8 @@ myApp.controller('mainController', ['$scope', '$http', '$location', function ($s
 myApp.controller('loginController', ['$scope', '$http', '$location', function ($scope, $http, $location) {
     console.log('i m in Login Controller');
 
-    $scope.email = "rishabh.dixit123@gmail.com";
-    $scope.password = "1405511655740";
+    $scope.email = "kashishgupta1990@yahoo.com";
+    $scope.password = "1405708544143";
 
     $scope.signupClick = function () {
         console.log('signUp Click');
