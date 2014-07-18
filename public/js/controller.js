@@ -64,6 +64,17 @@ myApp.controller('mainController', ['$scope', '$http', '$location', function ($s
 
     $scope.logout = function () {
         console.log('loging out event');
+        $scope.resetCookie();
+    };
+
+    $scope.resetCookie = function () {
+        console.log('reset cookie');
+        $.removeCookie('_id');
+        $.removeCookie('email');
+        $.removeCookie('relationship');
+        $.removeCookie('imgurl');
+        $.removeCookie('fullname');
+
         $scope.master.usersession = {
             _id: null,
             email: "",
@@ -76,41 +87,50 @@ myApp.controller('mainController', ['$scope', '$http', '$location', function ($s
             relationship: "",
             mobilenumber: "",
             age: ""
-        };
+        }
     };
-//todo jj
+
     $scope.checkPermission = function () {
-        console.log("Checking Permission " + JSON.stringify($scope.master.usersession));
-        var cook = $scope.getCookie('_id');
-        //console.log();
-        if (cook == null) {
+        console.log("Checking Permission ");
+        console.log($.cookie('_id'));
+        if ($.cookie('_id') == 'null') {
+            $scope.resetCookie();
             $location.path('/');
         }
         else {
-            $http.get('/user/' + cook)
-                .success(function (data) {
-                    console.log("check PEr get data " + JSON.stringify(data));
-                    $scope.master.usersession = data[0];
-                })
-                .error(function (err) {
-                    console.log(err);
-                });
+            restoreUserSession()
+            $scope.$apply;
         }
     };
 
-    $scope.getCookie = function (name) {
-        var value = "; " + document.cookie;
-        var parts = value.split("; " + name + "=");
-        if (parts.length == 2) return decodeURIComponent(parts.pop().split(";").shift()).split(/ /)[0].replace(/[^\d]/g, '');
-    };
+    function restoreUserSession() {
+        $scope.master.usersession = {
+            _id: $.cookie('_id'),
 
-    //decodeURIComponent(getCookie("username"));
+            email: $.cookie('email'),
+
+            status: true,
+            imgurl: $.cookie('imgurl'),
+            friends: [ ],
+            password: "",
+            fullname: $.cookie('fullname'),
+            sex: "",
+            relationship: $.cookie('relationship'),
+            mobilenumber: "",
+            age: ""
+        };
+
+
+    }
 
 }]);
 
 //Login Controller
 myApp.controller('loginController', ['$scope', '$http', '$location', function ($scope, $http, $location) {
     console.log('i m in Login Controller');
+
+    $scope.email = "rishabh.dixit123@gmail.com";
+    $scope.password = "1405511655740";
 
     $scope.signupClick = function () {
         console.log('signUp Click');
@@ -191,13 +211,24 @@ myApp.controller('formController', ['$scope', '$http', function ($scope, $http) 
 myApp.controller('changePasswordController', ['$scope', '$http', function ($scope, $http) {
     console.log('I m Change Password');
 
+    $scope.checkPermission();
+
 
 }]);
 
 //Profile Edit Controller
 myApp.controller('profileEditController', ['$scope', '$http', function ($scope, $http) {
     console.log('I m Profile Edit Controller');
-    //$scope.checkPermission();
+    $scope.checkPermission();
+
+    $http.get('/user/' + $.cookie('_id'))
+        .success(function (data) {
+            console.log('ProfileEdit: Get HIT URL');
+            console.log(data[0]);
+            $scope.master.usersession = data[0];
+        }).error(function (err) {
+            console.log(err);
+        });
 
     $scope.profileupdate = function () {
         console.log('Profile update button clicked');

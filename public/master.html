@@ -21,6 +21,8 @@
     <script src="js/angular-route.js"></script>
     <script src="js/controller.js"></script>
     <script src="js/notifIt.js" type="text/javascript"></script>
+    <script src="js/jquery.js"></script>
+    <script src="js/jquery.cookie.js"></script>
 
 </head>
 <body ng-app="myApp">
@@ -43,8 +45,8 @@ font-size: 16px;"> Relationship : {{master.usersession.relationship}} &nbsp;
                 <button data-toggle="dropdown" class="btn btn-danger dropdown-toggle">Profile Options <span
                         class="caret"></span></button>
                 <ul class="dropdown-menu">
-                    <li><a href="#">Settings</a></li>
-                    <li><a href="#">Change Password</a></li>
+                    <li><a  href="#profileedit">Settings</a></li>
+                    <li><a href="#changePassword">Change Password</a></li>
 
                     <li class="divider"></li>
                     <li><a ng-click="logout()" href="#">Logout</a></li>
@@ -135,7 +137,7 @@ font-size: 16px;"> Relationship : {{master.usersession.relationship}} &nbsp;
 <!-- /. WRAPPER  -->
 <!-- SCRIPTS -AT THE BOTOM TO REDUCE THE LOAD TIME-->
 <!-- JQUERY SCRIPTS -->
-<script src="js/jquery-1.10.2.js"></script>
+<!--<script src="js/jquery-1.10.2.js"></script>-->
 <!-- BOOTSTRAP SCRIPTS -->
 <script src="js/bootstrap.min.js"></script>
 <!-- METISMENU SCRIPTS -->
