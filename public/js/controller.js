@@ -4,10 +4,6 @@ myApp.config(function ($routeProvider) {
     $routeProvider
 
         .when('/', {
-            templateUrl: 'view/login.html',
-            controller: 'loginController'
-        })
-        .when('/home', {
             templateUrl: 'view/home.html',
             controller: 'homeController'
         })
@@ -34,37 +30,13 @@ myApp.controller('mainController', ['$scope', '$http', '$location', function ($s
     console.log('I m Main Controller');
 
     $scope.master = {};
-    $scope.master.usersession = {
-        _id: null,
-        email: "",
-        status: true,
-        imgurl: "img/find_user.png",
-        friends: [ ],
-        password: "",
-        fullname: "",
-        sex: "M",
-        relationship: "Single",
-        mobilenumber: "",
-        age: ""
-    };
+    $scope.master.usersession = {};
 
-    /*$scope.master.usersession = {
-     _id: "53c66782f42108c74addeed2",
-     email: "rishbh.dixit123@gmail.com",
-     status: true,
-     imgurl: "img/find_user.png",
-     friends: [ ],
-     password: "1405511655740",
-     fullname: "Rishab",
-     sex: "M",
-     relationship: "Single",
-     mobilenumber: "99989889",
-     age: "89"
-     };*/
 
     $scope.logout = function () {
         console.log('loging out event');
         $scope.resetCookie();
+        window.location.href = '/index.html';
     };
 
     $scope.resetCookie = function () {
@@ -123,62 +95,6 @@ myApp.controller('mainController', ['$scope', '$http', '$location', function ($s
 
     }
 
-}]);
-
-//Login Controller
-myApp.controller('loginController', ['$scope', '$http', '$location', function ($scope, $http, $location) {
-    console.log('i m in Login Controller');
-
-    $scope.email = "kashishgupta1990@yahoo.com";
-    $scope.password = "1405708544143";
-
-    $scope.signupClick = function () {
-        console.log('signUp Click');
-        console.log($scope.emailId);
-        var tmpObj = {email: $scope.emailId};
-        $http.post("/signuprequest", tmpObj)
-            .success(function (data) {
-                console.log(data);
-                $scope.master.usersession = data;
-            })
-            .error(function (err) {
-                console.log(err);
-            });
-
-    };
-
-    $scope.logInClick = function () {
-        console.log('LogIn Button Clicked');
-
-        $http.post('/verifyAccount', {email: $scope.email, password: $scope.password})
-            .success(function (result) {
-                result = result.replace(/"/g, "");
-                if (result != "Invalid User") {
-
-                    $http.get('/user/' + result)
-                        .success(function (data) {
-                            console.log("Before Assigning" + JSON.stringify(data[0]));
-
-                            $scope.master.usersession = data[0];
-
-                            console.log("just after login", $scope.master.usersession);
-                        })
-                        .error(function (err) {
-                            console.log(err);
-                        });
-
-                    console.log($scope.master.usersession);
-                    $location.path('home');
-                }
-                else {
-                    alert('Invalid User');
-                }
-
-            })
-            .error(function (err) {
-                console.log(err);
-            })
-    }
 }]);
 
 //Home Controller

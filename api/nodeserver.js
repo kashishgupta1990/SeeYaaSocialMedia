@@ -223,15 +223,6 @@ app.post('/verifyAccount', function (req, res) {
                 res.cookies.set('relationship', data[0].relationship, { signed: false, httpOnly: false });
                 res.cookies.set('fullname', data[0].fullname, { signed: false, httpOnly: false });
 
-
-                /*for (var x in data[0]) {
-                    console.log(x + data[0].hasOwnProperty(x));
-                    if (!data[0].hasOwnProperty(x)) {
-                        console.log(x + "=" + data[0][x]);
-                        res.cookies.set(x, data[0][x], { signed: false, httpOnly: false });
-                    }
-                }*/
-
                 res.send(data[0]._id);
             }
         }
