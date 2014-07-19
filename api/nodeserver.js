@@ -7,7 +7,8 @@ var db = require('./mongoapi.js'),
     fs = require('fs'),
     bodyParser = require('body-parser'),
     keys = require("keygrip")(['a', 'b']),
-    cookie = require("cookies").express;
+    cookie = require("cookies").express,
+    async = require('async');
 
 
 app.use(express.static(path.join(__dirname + "/..", "public")));
@@ -20,6 +21,49 @@ app.use(cookie(keys));
 
 //REST API -------------------------------------------------------------------------
 //Static index.html Page is Running
+
+//Fill JUST FOR TESTING Database
+app.get('/pushfriend', function (req, res) {
+
+    var tasks = [];
+
+    for (var x = 0; x < 50; x++) {
+
+        var obj = {
+            email: "user" + x,
+            password: "" + x,
+            imgurl: "img/find_user.png",
+            fullname: "User-" + x,
+            sex: "M",
+            age: "24",
+            mobilenumber: "844749722",
+            relationship: "Single",
+            status: true,
+            friends: [],
+            posts: []
+        };
+
+        tasks.push((function (o) {
+            return function (callback) {
+                db.insertUser(o, function (err, data) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        console.log(data);
+                    }
+                    callback(err, data);
+                });
+            }
+        })(obj))
+    }
+
+    async.series(tasks, function (err, data) {
+        console.log(err);
+        console.log(data);
+        res.send('done');
+    })
+
+});
 
 //Signup Conformation
 app.get('/signupconformation/:id', function (req, res) {
@@ -107,6 +151,8 @@ var server = app.get('/', function (req, res) {
 //SignUp Request Data
 app.post('/signuprequest', function (req, res) {
     var obj = req.body;
+    obj["sex"] = "M";
+    obj["relationship"] = "Single";
     obj["status"] = false;
     obj["imgurl"] = "img/find_user.png";
     obj["password"] = +new Date();
@@ -145,7 +191,6 @@ app.post('/signuprequest', function (req, res) {
     });
 });
 
-
 //Get User Data
 app.get('/user/:id?', function (req, res) {
     var id = req.params.id;
@@ -167,15 +212,15 @@ app.get('/user/:id?', function (req, res) {
     else {
         //All Data
 
-        /*db.getUser(obj, function (err, result) {
-         if (err) {
-         res.send(err);
-         }
-         else {
-         var objString = JSON.stringify(result);
-         res.send(objString);
-         }
-         });*/
+        db.getUser(obj, function (err, result) {
+            if (err) {
+                res.send(err);
+            }
+            else {
+                var objString = JSON.stringify(result);
+                res.send(objString);
+            }
+        });
     }
 });
 

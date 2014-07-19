@@ -1,6 +1,6 @@
 var myApp = angular.module('myApp', ['ngRoute']);
 
-
+//Routing Config
 myApp.config(function ($routeProvider) {
     $routeProvider
 
@@ -12,9 +12,9 @@ myApp.config(function ($routeProvider) {
             templateUrl: 'view/changePassword',
             controller: 'changePasswordController'
         })
-        .when('/chart', {
-            templateUrl: 'view/chart.html',
-            controller: 'chartController'
+        .when('/myfriend', {
+            templateUrl: 'view/myFriend.html',
+            controller: 'myfriend'
         })
         .when('/form', {
             templateUrl: 'view/form.html',
@@ -66,6 +66,7 @@ myApp.controller('mainController', ['$scope', '$http', '$location', function ($s
 
     $scope.checkPermission = function () {
         console.log("Checking Permission ");
+
         if ($.cookie('_id') == null || $.cookie('_id') == 'undefined') {
             $scope.logout();
         }
@@ -94,16 +95,74 @@ myApp.controller('homeController', ['$scope', '$http', function ($scope, $http) 
     console.log('I m Home Controller');
     $scope.checkPermission();
 
+    //Set Time Interval For New Notifications
+
+
     //Do Something here
 
 }]);
 
-//Chart Controller
-myApp.controller('chartController', ['$scope', '$http', function ($scope, $http) {
-    console.log('I m Chart Controller');
-     $scope.checkPermission();
+//MyFriend Controller
+myApp.controller('myfriend', ['$scope', '$http', function ($scope, $http) {
+    console.log('I m MyFriend Controller');
+    $scope.checkPermission();
 
-    //Do Something here
+    $scope.friend = {};
+    $scope.friend.all = {};
+
+    $http.get('/user')
+        .success(function (data) {
+
+            var toRemove = [];
+            toRemove.push($scope.master.usersession._id);
+
+            for (var da = 0; da < $scope.master.usersession.friends.length; da++) {
+                toRemove.push($scope.master.usersession.friends[da]._id);
+            }
+
+            //Filtering existing friend and myself from the users
+            var filterResult = data.filter(function (usr) {
+                return !toRemove.some(function (idx) {
+                    return idx == usr._id;
+                })
+            });
+
+            data = filterResult;
+
+            $scope.friend.all = data;
+
+        })
+        .error(function (err) {
+            console.log(err);
+        });
+
+    $scope.sendRequest = function (userindex) {
+        console.log($scope.friend.all[userindex]);
+
+        //Add Friend with TRUE Status in his own list
+        var youAreMyFriend = {_id: $scope.friend.all[userindex]._id, status: true};
+        $scope.master.usersession.friends.push(youAreMyFriend);
+        $http.put('/user/' + $scope.master.usersession._id, $scope.master.usersession)
+            .success(function (data) {
+                console.log(data);
+            })
+            .error(function (err) {
+                console.log(err);
+            });
+
+        //Add Me in Your Friend List with Status False
+        var addMeAsFriend = {_id: $scope.master.usersession._id, status: false};
+        $scope.friend.all[userindex].friends.push(addMeAsFriend);
+        $http.put('/user/' + $scope.friend.all[userindex]._id, $scope.friend.all[userindex])
+            .success(function (data) {
+                console.log(data);
+                $scope.friend.all.splice(userindex, 1);
+                $scope.$apply;
+            })
+            .error(function (err) {
+                console.log(err);
+            });
+    };
 }]);
 
 //Form Controller

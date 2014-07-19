@@ -37,22 +37,28 @@
             </button>
             <a class="navbar-brand" href="master.html">{{master.usersession.fullname}}</a>
         </div>
-        <div style="color: white;
-padding: 15px 50px 5px 50px;
-float: right;
-font-size: 16px;"> Relationship : {{master.usersession.relationship}} &nbsp;
-            <div style="margin:5px;" class="btn-group">
-                <button data-toggle="dropdown" class="btn btn-danger dropdown-toggle">Profile Options <span
-                        class="caret"></span></button>
-                <ul class="dropdown-menu">
-                    <li><a  href="#profileedit">Edit Profile</a></li>
-                    <li><a href="#changePassword">Change Password</a></li>
-
-                    <li class="divider"></li>
-                    <li><a ng-click="logout()" href="#">Logout</a></li>
-                </ul>
+        <!--<form class="navbar-form navbar-left" role="form">
+            <div class="form-group">
+                <input type="text" placeholder="Looking For Friend??" class="form-control">
             </div>
-        </div>
+            <button type="button" class="btn btn-success">Search</button>
+        </form>-->
+        <form class="navbar-form navbar-right" role="form">
+            <div style="color: white;font-size: 16px;"> Relationship : {{master.usersession.relationship}} &nbsp;
+                <div style="margin:5px;" class="btn-group">
+                    <button data-toggle="dropdown" class="btn btn-danger dropdown-toggle">Profile Options <span
+                            class="caret"></span></button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#profileedit">Edit Profile</a></li>
+                        <li><a href="#changePassword">Change Password</a></li>
+
+                        <li class="divider"></li>
+                        <li><a ng-click="logout()" href="#">Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+            </form>
+
     </nav>
     <!-- /. NAV TOP  -->
 
@@ -63,12 +69,11 @@ font-size: 16px;"> Relationship : {{master.usersession.relationship}} &nbsp;
                     <img src={{master.usersession.imgurl}} class="user-image img-responsive"/>
                 </li>
 
-
                 <li>
-                    <a class="active-menu" href="master.html"><i class="fa fa-dashboard fa-3x"></i> Dashboard</a>
+                    <a class="active-menu" href="#/"><i class="fa fa-dashboard fa-3x"></i> Dashboard</a>
                 </li>
                 <li>
-                    <a href="ui.html"><i class="fa fa-desktop fa-3x"></i> UI Elements</a>
+                    <a href="#myfriend"><i class="fa fa-desktop fa-3x"></i>My Friends</a>
                 </li>
                 <li>
                     <a href="tab-panel.html"><i class="fa fa-qrcode fa-3x"></i> Tabs & Panels</a>
@@ -82,8 +87,6 @@ font-size: 16px;"> Relationship : {{master.usersession.relationship}} &nbsp;
                 <li>
                     <a href="form.html"><i class="fa fa-edit fa-3x"></i> Forms </a>
                 </li>
-
-
                 <li>
                     <a href="#"><i class="fa fa-sitemap fa-3x"></i> Multi-Level Dropdown<span
                             class="fa arrow"></span></a>

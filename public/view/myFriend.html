@@ -1,0 +1,44 @@
+<div class="col-md-8 col-sm-14 col-xs-12">
+
+    <div class="chat-panel panel panel-default chat-boder chat-panel-head">
+        <div class="panel-heading">
+            <i class="fa fa-check-square"></i>
+            Search Friend
+            <div class="input-group">
+                <input id="btn-input" ng-model="filterFriend" type="text" class="form-control input-sm"
+                       placeholder="Find Your Friend Here ... "/>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-warning btn-sm" id="btn-chat">
+                                        Search
+                                    </button>
+                                </span>
+            </div>
+        </div>
+
+        <div class="panel-body">
+            <ul class="chat-box">
+                <li class="left clearfix" ng-repeat="frnd in friend.all | filter:filterFriend">
+                                    <span class="chat-img pull-left" >
+                                        <img style="width: 40px" src={{frnd.imgurl}} alt="User" class="img-circle"/>
+                                    </span>
+
+                    <div class="chat-body">
+                        <strong>{{frnd.fullname}}  ( {{frnd.relationship}} ) </strong><i
+                            class="fa fa-hand-o-right"></i>({{frnd.sex == 'M'?'Male':'Female'}})
+                        <small class="pull-right text-muted">
+                            <input type="button" class="btn btn-success btn-xs" ng-click="sendRequest($index)"
+                                   value="Send Request"/>
+                        </small>
+
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="panel-footer">
+
+        </div>
+
+    </div>
+
+</div>
