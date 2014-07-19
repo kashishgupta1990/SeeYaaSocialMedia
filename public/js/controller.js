@@ -33,6 +33,8 @@ myApp.controller('mainController', ['$scope', '$http', '$location', function ($s
 
     $scope.master = {};
     $scope.master.usersession = {};
+    $scope.master.notification = {};
+    $scope.master.notification.pendingFriendRequest = [];
 
 
     $scope.logout = function () {
@@ -64,6 +66,29 @@ myApp.controller('mainController', ['$scope', '$http', '$location', function ($s
         }
     };
 
+    $scope.getFriendRequestNotification = function () {
+        //Pending Friend Request Waiting
+        $scope.master.notification.pendingFriendRequest = [];
+        for (var ct = 0; ct < $scope.master.usersession.friends.length; ct++) {
+            if ($scope.master.usersession.friends[ct].status == false) {
+                $scope.master.notification.pendingFriendRequest.push($scope.master.usersession.friends[ct]);
+            }
+        }
+
+        for (var u = 0; u < $scope.master.notification.pendingFriendRequest.length; u++) {
+            (function (urlIndex) {
+                $http.get('/user/' + $scope.master.notification.pendingFriendRequest[urlIndex]._id)
+                    .success(function (data) {
+                        $scope.master.notification.pendingFriendRequest[urlIndex] = data[0];
+                    })
+                    .error(function (err) {
+                        console.log(err);
+                    })
+            })(u);
+        }
+
+    };
+
     $scope.checkPermission = function () {
         console.log("Checking Permission ");
 
@@ -73,7 +98,6 @@ myApp.controller('mainController', ['$scope', '$http', '$location', function ($s
         else {
             console.log('Restoring Session');
             restoreUserSession();
-            $scope.$apply;
         }
     };
 
@@ -82,24 +106,62 @@ myApp.controller('mainController', ['$scope', '$http', '$location', function ($s
         $http.get('/user/' + $.cookie('_id'))
             .success(function (data) {
                 $scope.master.usersession = data[0];
-                console.log($scope.master.usersession);
+                console.log("Restore User Session Completed");
+                $scope.$apply;
             })
             .error(function (err) {
                 console.log(err);
+                console.log('Now Apply LogOut');
+                $scope.logout();
+                $scope.$apply;
             });
     }
 }]);
 
 //Home Controller
-myApp.controller('homeController', ['$scope', '$http', function ($scope, $http) {
+myApp.controller('homeController', ['$scope', '$http', '$interval', '$q', function ($scope, $http, $interval, $q) {
     console.log('I m Home Controller');
     $scope.checkPermission();
 
     //Set Time Interval For New Notifications
+    var stopNotification = $interval(function () {
+
+        //Updating user data with WebApplication
+        $scope.checkPermission();
+
+        //Get Friend Request Notification
+        $scope.getFriendRequestNotification();
+
+    }, 10000);
+
+    $scope.showAcceptFriendRequestModalPopUp = function () {
+        console.log('showAcceptFriendRequestModalPopUp');
 
 
-    //Do Something here
+        $('#acceptFriendRequestModalPopUp').modal('show');
+    };
 
+    $scope.acceptRequest = function (index) {
+        console.log('Just Accept Friend Request');
+
+        for (var i = 0; i < $scope.master.usersession.friends.length; i++) {
+            if ($scope.master.usersession.friends[i]._id == $scope.master.notification.pendingFriendRequest[index]._id) {
+                $scope.master.usersession.friends[i].status = true;
+                break;
+            }
+        }
+
+        $http.put('/user/' + $scope.master.usersession._id, $scope.master.usersession)
+            .success(function (data) {
+
+                //Get Friend Request Notification
+                $scope.getFriendRequestNotification();
+                $scope.$apply;
+            })
+            .error(function (err) {
+                console.log(err);
+            });
+    }
 }]);
 
 //MyFriend Controller

@@ -39,15 +39,16 @@
     </div>
 </div>
 <div class="col-md-3 col-sm-6 col-xs-6">
-    <div class="panel panel-back noti-box">
+    <div ng-click="showAcceptFriendRequestModalPopUp()" class="panel panel-back noti-box">
                 <span class="icon-box bg-color-brown set-icon">
                     <i class="fa fa-rocket"></i>
                 </span>
 
         <div class="text-box">
-            <p class="main-text">3 Orders</p>
+            <p class="main-text">{{master.notification.pendingFriendRequest.length ==
+                0?0:master.notification.pendingFriendRequest.length+ "\nNew"}}</p>
 
-            <p class="text-muted">Pending</p>
+            <p class="text-muted">FriendRequest</p>
         </div>
     </div>
 </div>
@@ -434,6 +435,42 @@
                 <div id="morris-donut-chart"></div>
             </div>
         </div>
+    </div>
+</div>
 
+<div id="acceptFriendRequestModalPopUp" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Accept Friend Request</h4>
+            </div>
+            <div class="modal-body">
+                <div class="chat-panel panel panel-default chat-boder chat-panel-head">
+                    <div class="panel-body">
+                        <ul class="chat-box">
+                            <li class="left clearfix" ng-repeat="cf in master.notification.pendingFriendRequest">
+                                    <span class="chat-img pull-left">
+                                        <img style="width: 40px" src={{cf.imgurl}} alt="User" class="img-circle"/>
+                                    </span>
+
+                                <div class="chat-body">
+                                    <strong>{{cf.fullname}} ( {{cf.relationship}} ) </strong><i
+                                        class="fa fa-hand-o-right"></i>({{cf.sex == 'M'?'Male':'Female'}})
+                                    <small class="pull-right text-muted">
+                                        <input type="button" class="btn btn-success btn-xs"
+                                               ng-click="acceptRequest($index)"
+                                               value="Accept Request"/>
+                                    </small>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
     </div>
 </div>
