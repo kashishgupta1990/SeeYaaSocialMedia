@@ -20,6 +20,86 @@ app.use(cookie(keys));
 
 //REST API -------------------------------------------------------------------------
 //Static index.html Page is Running
+
+//Signup Conformation
+app.get('/signupconformation/:id', function (req, res) {
+
+    var id = req.params.id;
+    console.log('GET /signupconformation/' + id);
+    var obj = {status: true};
+    var sentList = [];
+
+    db.updateUser(id, obj, function (err, resutl) {
+        if (err) {
+            console.log(err);
+            res.send(err);
+        } else {
+
+            db.getUser({_id: id}, function (err, result) {
+                //Sending EmailId And Password Successfully Mail
+                sentList.push(result[0].email);
+
+                mailSender.send(config.mail.emailId,
+                    config.mail.password,
+                    sentList,
+                    "Welcome To See Yaa Social Network Site",
+                        "Your EmailId: " + result[0].email + " Password: " + obj.password,
+                        "Your EmailId: " + result[0].email + " Password: " + obj.password);
+
+                res.send("Your Account Activated Successfully. Please Check Your Mail For ID and Password");
+            });
+
+
+        }
+    })
+});
+
+//Securing API Request
+app.use('/', function (req, res, next) {
+    console.log(req.url);
+
+    switch (req.url) {
+
+        //public urls
+        case '/css/bootstrap.css.map':
+        case '/verifyAccount':
+        case '/signuprequest':
+        case '/signupconformation/:id':
+            console.log('public allowed link');
+            next();
+            break;
+
+        //secured urls
+        default :
+            console.log('Secured API links');
+            var id = req.cookies.get('_id');
+
+            var obj = {};
+            obj["_id"] = id;
+
+            db.getUser(obj, function (err, result) {
+                delete result.password;
+                if (err) {
+                    console.log('error');
+                    res.send(err);
+                }
+                else {
+                    if (result.length == 0) {
+                        res.send('You need authentication to use this API.')
+                    }
+                    else {
+                        if (result[0]._id == id) {
+                            next();
+                        }
+                        else {
+                            res.send('You need authentication to use this API.')
+                        }
+                    }
+                }
+            });
+    }
+});
+
 var server = app.get('/', function (req, res) {
     res.send('API HOME');
 });
@@ -29,6 +109,7 @@ app.post('/signuprequest', function (req, res) {
     var obj = req.body;
     obj["status"] = false;
     obj["imgurl"] = "img/find_user.png";
+    obj["password"] = +new Date();
 
     db.insertUser(obj, function (err, data) {
         var sentList = [];
@@ -64,39 +145,6 @@ app.post('/signuprequest', function (req, res) {
     });
 });
 
-//Signup Conformation
-app.get('/signupconformation/:id', function (req, res) {
-
-    var id = req.params.id;
-    console.log('GET /signupconformation/' + id);
-    var obj = {status: true, password: +new Date()};
-    var sentList = [];
-
-    db.updateUser(id, obj, function (err, resutl) {
-        if (err) {
-            console.log(err);
-            res.send(err);
-        } else {
-            console.log(resutl);
-
-            db.getUser({_id: id}, function (err, result) {
-                //Sending EmailId And Password Successfully Mail
-                sentList.push(result[0].email);
-
-                mailSender.send(config.mail.emailId,
-                    config.mail.password,
-                    sentList,
-                    "Welcome To See Yaa Social Network Site",
-                        "Your EmailId: " + result[0].email + " Password: " + obj.password,
-                        "Your EmailId: " + result[0].email + " Password: " + obj.password);
-
-                res.send("Your Account Activated Successfully. Please Check Your Mail For ID and Password");
-            });
-
-
-        }
-    })
-});
 
 //Get User Data
 app.get('/user/:id?', function (req, res) {
@@ -110,6 +158,7 @@ app.get('/user/:id?', function (req, res) {
                 res.send(err);
             }
             else {
+                result.password = '';
                 var objString = JSON.stringify(result);
                 res.send(objString);
             }
@@ -117,15 +166,16 @@ app.get('/user/:id?', function (req, res) {
     }
     else {
         //All Data
-        db.getUser(obj, function (err, result) {
-            if (err) {
-                res.send(err);
-            }
-            else {
-                var objString = JSON.stringify(result);
-                res.send(objString);
-            }
-        });
+
+        /*db.getUser(obj, function (err, result) {
+         if (err) {
+         res.send(err);
+         }
+         else {
+         var objString = JSON.stringify(result);
+         res.send(objString);
+         }
+         });*/
     }
 });
 
@@ -216,19 +266,12 @@ app.post('/verifyAccount', function (req, res) {
                 res.send('Invalid User')
             }
             else {
-
                 res.cookies.set('_id', data[0]._id, { signed: false, httpOnly: false });
-                res.cookies.set('email', data[0].email, { signed: false, httpOnly: false });
-                res.cookies.set('imgurl', data[0].imgurl, { signed: false, httpOnly: false });
-                res.cookies.set('relationship', data[0].relationship, { signed: false, httpOnly: false });
-                res.cookies.set('fullname', data[0].fullname, { signed: false, httpOnly: false });
-
                 res.send(data[0]._id);
             }
         }
     });
 });
-
 
 
 //------------END---------------------------------------------------------

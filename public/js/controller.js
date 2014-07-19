@@ -1,5 +1,6 @@
 var myApp = angular.module('myApp', ['ngRoute']);
 
+
 myApp.config(function ($routeProvider) {
     $routeProvider
 
@@ -22,7 +23,8 @@ myApp.config(function ($routeProvider) {
         .when('/profileedit', {
             templateUrl: 'view/profileedit.html',
             controller: 'profileEditController'
-        });
+        })
+        .otherwise({ redirectTo: '/' });
 });
 
 //Main Controller
@@ -64,43 +66,32 @@ myApp.controller('mainController', ['$scope', '$http', '$location', function ($s
 
     $scope.checkPermission = function () {
         console.log("Checking Permission ");
-        console.log($.cookie('_id'));
-        if ($.cookie('_id') == 'null') {
-            $scope.resetCookie();
-            $location.path('/');
+        if ($.cookie('_id') == null || $.cookie('_id') == 'undefined') {
+            $scope.logout();
         }
         else {
-            restoreUserSession()
+            console.log('Restoring Session');
+            restoreUserSession();
             $scope.$apply;
         }
     };
 
     function restoreUserSession() {
-        $scope.master.usersession = {
-            _id: $.cookie('_id'),
 
-            email: $.cookie('email'),
-
-            status: true,
-            imgurl: $.cookie('imgurl'),
-            friends: [ ],
-            password: "",
-            fullname: $.cookie('fullname'),
-            sex: "",
-            relationship: $.cookie('relationship'),
-            mobilenumber: "",
-            age: ""
-        };
-
-
+        $http.get('/user/' + $.cookie('_id'))
+            .success(function (data) {
+                $scope.master.usersession = data[0];
+                console.log($scope.master.usersession);
+            })
+            .error(function (err) {
+                console.log(err);
+            });
     }
-
 }]);
 
 //Home Controller
 myApp.controller('homeController', ['$scope', '$http', function ($scope, $http) {
     console.log('I m Home Controller');
-    console.log($scope.master.usersession);
     $scope.checkPermission();
 
     //Do Something here
@@ -110,7 +101,7 @@ myApp.controller('homeController', ['$scope', '$http', function ($scope, $http) 
 //Chart Controller
 myApp.controller('chartController', ['$scope', '$http', function ($scope, $http) {
     console.log('I m Chart Controller');
-    // $scope.checkPermission();
+     $scope.checkPermission();
 
     //Do Something here
 }]);
@@ -118,7 +109,7 @@ myApp.controller('chartController', ['$scope', '$http', function ($scope, $http)
 //Form Controller
 myApp.controller('formController', ['$scope', '$http', function ($scope, $http) {
     console.log('I m form Controller');
-    //$scope.checkPermission();
+    $scope.checkPermission();
 
     //Do Something here
 }]);
@@ -140,7 +131,6 @@ myApp.controller('profileEditController', ['$scope', '$http', function ($scope, 
     $http.get('/user/' + $.cookie('_id'))
         .success(function (data) {
             console.log('ProfileEdit: Get HIT URL');
-            console.log(data[0]);
             $scope.master.usersession = data[0];
         }).error(function (err) {
             console.log(err);
@@ -149,13 +139,16 @@ myApp.controller('profileEditController', ['$scope', '$http', function ($scope, 
     $scope.profileupdate = function () {
         console.log('Profile update button clicked');
 
-        console.log($scope.master.usersession);
-        $http.put('/user/' + $scope.master.usersession._id, $scope.master.usersession)
-            .success(function (data) {
-                console.log("result>> " + data);
-            })
-            .error(function (err) {
-                console.log("Error >>" + err);
-            });
+        if ($.cookie('_id')) {
+            $http.put('/user/' + $scope.master.usersession._id, $scope.master.usersession)
+                .success(function (data) {
+                    console.log("result>> " + data);
+                })
+                .error(function (err) {
+                    console.log("Error >>" + err);
+                });
+        }
+        else {
+        }
     };
 }]);

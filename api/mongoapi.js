@@ -40,7 +40,7 @@ module.exports.insertUser =
 
 module.exports.getUser =
     function getUser(condition, callback) {
-        UserModel.find(condition, {__v: 0}).exec(function (err, result) {
+        UserModel.find(condition, {__v: 0, password: 0}).exec(function (err, result) {
             callback(err, result);
         });
     };
