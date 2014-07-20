@@ -1,44 +1,86 @@
-<div class="col-md-8 col-sm-14 col-xs-12">
+<div class="row">
+    <div class="col-md-8">Detail and current activity of my friends</div>
+    <div class="col-md-4">
+        <div class="row">
+            <button type="button" ng-click="sendFriendRequestModalPopUp()" class="btn btn-warning col-md-12">Send
+                Friend Request
+            </button>
+        </div>
+        <hr/>
+        <div class="row">
 
-    <div class="chat-panel panel panel-default chat-boder chat-panel-head">
-        <div class="panel-heading">
-            <i class="fa fa-check-square"></i>
-            Search Friend
-            <div class="input-group">
-                <input id="btn-input" ng-model="filterFriend" type="text" class="form-control input-sm"
-                       placeholder="Find Your Friend Here ... "/>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="fa fa-user"></i> My Friend List</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="list-group">
+
+                        <a ng-repeat="dta in friend.myFriendList" href="#" class="list-group-item">
+                            <span class="badge">{{dta.sex=='M'?'Male':'Female'}}</span>
+                            <span class="badge">{{dta.relationship}}</span>
+                            <i class="fa fa-user"></i> {{dta.fullname}}
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="sendFriendRequestModalPopUp" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-body">
+
+                <div class="chat-panel panel panel-default chat-boder chat-panel-head">
+                    <div class="panel-heading">
+                        <i class="fa fa-check-square"></i>
+                        Search Friend
+                        <div class="input-group">
+                            <input id="btn-input" ng-model="filterFriend" type="text" class="form-control input-sm"
+                                   placeholder="Find Your Friend Here ... "/>
                                 <span class="input-group-btn">
                                     <button class="btn btn-warning btn-sm" id="btn-chat">
                                         Search
                                     </button>
                                 </span>
-            </div>
-        </div>
+                        </div>
+                    </div>
 
-        <div class="panel-body">
-            <ul class="chat-box">
-                <li class="left clearfix" ng-repeat="frnd in friend.all | filter:filterFriend">
-                                    <span class="chat-img pull-left" >
+                    <div class="panel-body">
+                        <ul class="chat-box">
+                            <li class="left clearfix" ng-repeat="frnd in friend.all | filter:filterFriend">
+                                    <span class="chat-img pull-left">
                                         <img style="width: 40px" src={{frnd.imgurl}} alt="User" class="img-circle"/>
                                     </span>
 
-                    <div class="chat-body">
-                        <strong>{{frnd.fullname}}  ( {{frnd.relationship}} ) </strong><i
-                            class="fa fa-hand-o-right"></i>({{frnd.sex == 'M'?'Male':'Female'}})
-                        <small class="pull-right text-muted">
-                            <input type="button" class="btn btn-success btn-xs" ng-click="sendRequest($index)"
-                                   value="Send Request"/>
-                        </small>
+                                <div class="chat-body">
+                                    <strong>{{frnd.fullname}} ( {{frnd.relationship}} ) </strong><i
+                                        class="fa fa-hand-o-right"></i>({{frnd.sex == 'M'?'Male':'Female'}})
+                                    <small class="pull-right text-muted">
+                                        <input type="button" class="btn btn-success btn-xs"
+                                               ng-click="sendRequest($index)"
+                                               value="Send Request"/>
+                                    </small>
 
+                                </div>
+                            </li>
+                        </ul>
                     </div>
-                </li>
-            </ul>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Close</button>
+
+            </div>
+
         </div>
-
-        <div class="panel-footer">
-
-        </div>
-
     </div>
-
 </div>

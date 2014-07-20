@@ -100,7 +100,7 @@ app.get('/signupconformation/:id', function (req, res) {
 
 //Securing API Request
 app.use('/', function (req, res, next) {
-    console.log(req.url);
+    //console.log(req.url);
 
     switch (req.url) {
 
@@ -109,13 +109,13 @@ app.use('/', function (req, res, next) {
         case '/verifyAccount':
         case '/signuprequest':
         case '/signupconformation/:id':
-            console.log('public allowed link');
+            //console.log('public allowed link');
             next();
             break;
 
         //secured urls
         default :
-            console.log('Secured API links');
+           // console.log('Secured API links');
             var id = req.cookies.get('_id');
 
             var obj = {};
@@ -314,6 +314,20 @@ app.post('/verifyAccount', function (req, res) {
                 res.cookies.set('_id', data[0]._id, { signed: false, httpOnly: false });
                 res.send(data[0]._id);
             }
+        }
+    });
+});
+
+//Get Existing Friend List
+app.get('/friendlist/:id', function (req, res) {
+    var id = req.params.id;
+    console.log(id);
+    db.getMyFriendList(id, function (err, result) {
+        if (err) {
+            res.send(err);
+        }
+        else {
+            res.send(result);
         }
     });
 });

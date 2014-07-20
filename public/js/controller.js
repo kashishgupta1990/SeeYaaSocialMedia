@@ -106,6 +106,7 @@ myApp.controller('mainController', ['$scope', '$http', '$location', function ($s
         $http.get('/user/' + $.cookie('_id'))
             .success(function (data) {
                 $scope.master.usersession = data[0];
+
                 console.log("Restore User Session Completed");
                 $scope.$apply;
             })
@@ -153,7 +154,10 @@ myApp.controller('homeController', ['$scope', '$http', '$interval', '$q', functi
 
         $http.put('/user/' + $scope.master.usersession._id, $scope.master.usersession)
             .success(function (data) {
-
+                notif({
+                    msg: "Requested Accepted Successfully",
+                    type: "success"
+                });
                 //Get Friend Request Notification
                 $scope.getFriendRequestNotification();
                 $scope.$apply;
@@ -165,38 +169,68 @@ myApp.controller('homeController', ['$scope', '$http', '$interval', '$q', functi
 }]);
 
 //MyFriend Controller
-myApp.controller('myfriend', ['$scope', '$http', function ($scope, $http) {
+myApp.controller('myfriend', ['$scope', '$http', '$interval', function ($scope, $http, $interval) {
     console.log('I m MyFriend Controller');
-    $scope.checkPermission();
 
     $scope.friend = {};
     $scope.friend.all = {};
+    $scope.friend.myFriendList = {};
 
-    $http.get('/user')
-        .success(function (data) {
+    $scope.checkPermission();
 
-            var toRemove = [];
-            toRemove.push($scope.master.usersession._id);
-
-            for (var da = 0; da < $scope.master.usersession.friends.length; da++) {
-                toRemove.push($scope.master.usersession.friends[da]._id);
-            }
-
-            //Filtering existing friend and myself from the users
-            var filterResult = data.filter(function (usr) {
-                return !toRemove.some(function (idx) {
-                    return idx == usr._id;
-                })
+    function friendRequestAccept() {
+        //Get Friend Request Accept Notification
+        $http.get('/friendlist/' + $.cookie('_id'))
+            .success(function (data) {
+                $scope.friend.myFriendList = data;
+            })
+            .error(function (err) {
+                console.log(err);
             });
+    }
 
-            data = filterResult;
+    friendRequestAccept();
 
-            $scope.friend.all = data;
+    //Set Time Interval For New Notifications
+    var stopNotification = $interval(function () {
 
-        })
-        .error(function (err) {
-            console.log(err);
-        });
+        //Updating user data with WebApplication
+        $scope.checkPermission();
+
+        friendRequestAccept();
+
+
+    }, 10000);
+
+    $scope.sendFriendRequestModalPopUp = function () {
+        $http.get('/user')
+            .success(function (data) {
+
+                var toRemove = [];
+                toRemove.push($scope.master.usersession._id);
+
+                for (var da = 0; da < $scope.master.usersession.friends.length; da++) {
+                    toRemove.push($scope.master.usersession.friends[da]._id);
+                }
+
+                //Filtering existing friend and myself from the users
+                var filterResult = data.filter(function (usr) {
+                    return !toRemove.some(function (idx) {
+                        return idx == usr._id;
+                    })
+                });
+
+                data = filterResult;
+
+                $scope.friend.all = data;
+
+                $('#sendFriendRequestModalPopUp').modal('show');
+
+            })
+            .error(function (err) {
+                console.log(err);
+            });
+    };
 
     $scope.sendRequest = function (userindex) {
         console.log($scope.friend.all[userindex]);
@@ -218,6 +252,12 @@ myApp.controller('myfriend', ['$scope', '$http', function ($scope, $http) {
         $http.put('/user/' + $scope.friend.all[userindex]._id, $scope.friend.all[userindex])
             .success(function (data) {
                 console.log(data);
+                notif({
+                    type: "success",
+                    msg: "Friend Request Sent Successfully",
+                    position: "right",
+                    fade: true
+                });
                 $scope.friend.all.splice(userindex, 1);
                 $scope.$apply;
             })
@@ -263,13 +303,20 @@ myApp.controller('profileEditController', ['$scope', '$http', function ($scope, 
         if ($.cookie('_id')) {
             $http.put('/user/' + $scope.master.usersession._id, $scope.master.usersession)
                 .success(function (data) {
-                    console.log("result>> " + data);
+                    notif({
+                        type: "success",
+                        msg: "Profile Updated Successfully",
+                        position: "right",
+                        fade: true
+                    });
+                    console.log("Profile Updated Successfully");
                 })
                 .error(function (err) {
                     console.log("Error >>" + err);
                 });
         }
         else {
+            $scope.logout();
         }
     };
 }]);

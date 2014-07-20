@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
-    <title>Landing Page template</title>
+    <title>See Yaa Social Media</title>
     <!--<link href="css/font-awesome.min.css" rel="stylesheet">-->
     <!--[if lt IE 9]>
     <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -12,15 +12,15 @@
     <script src="js/jquery.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/angular-route.js"></script>
-    <script src="js/bootstrap-popover.js"></script>
+    <script src="js/notifIt.js" type="text/javascript"></script>
     <script>
         var myApp = angular.module('myApp', []);
         //Login Controller
         myApp.controller('loginController', ['$scope', '$http', '$location', function ($scope, $http, $location) {
             console.log('i m in Login Controller');
 
-            $scope.email = "user1";
-            $scope.password = "1";
+            $scope.email = "";
+            $scope.password = "";
 
             $scope.signupClick = function () {
                 console.log('signUp Click');
@@ -30,8 +30,24 @@
                         .success(function (data) {
                             console.log(data);
                             $scope.master.usersession = data;
+
+                            notif({
+                                type: "success",
+                                msg: "Email Sent. Please Check Your Inbox Now",
+                                position: "right",
+                                fade: true
+                            });
+
+                            $scope.emailId = "";
+
                         })
                         .error(function (err) {
+                            notif({
+                                type: "warning",
+                                msg: "Failed To Send Mail!!!",
+                                position: "right",
+                                opacity: 0.8
+                            });
                             console.log(err);
                         });
 
@@ -48,7 +64,12 @@
                                 window.location.href = '/master.html';
                             }
                             else {
-                                alert('Invalid User');
+
+                                notif({
+                                    msg: "<b>Oops!</b> Incorrect EmailId Or PAssword!",
+                                    type: "error",
+                                    position: "right"
+                                });
                             }
 
                         })
@@ -58,16 +79,11 @@
             }
         }]);
     </script>
-    <script>
-        $(document).ready(function () {
-            $('#email').popover('Enter Email Id');
-            $('#password').popover('Enter Password');
-        });
-    </script>
 
 
     <link href="css/bootstrap.css" rel="stylesheet">
     <link href="css/styles.css" rel="stylesheet">
+    <link href="css/notifIt.css" type="text/css" rel="stylesheet">
 
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">

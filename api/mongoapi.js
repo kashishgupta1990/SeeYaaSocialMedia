@@ -59,6 +59,47 @@ module.exports.updateUser =
         })
     };
 
+module.exports.getMyFriendList =
+    function getMyFriendList(id, callback) {
+
+        UserModel.find({_id: id}, {__v: 0, password: 0}).exec(function (err, result) {
+            if (err) {
+                callback(err, result);
+            }
+            else {
+                if (result.length == 1) {
+                    var friendsId = result[0].friends.filter(function (dt) {
+                        return dt.status == true;
+                    });
+
+                    var ids = [];
+                    for (var x = 0; x < friendsId.length; x++) {
+                        ids[x] = {_id: friendsId[x]._id};
+                    }
+
+                    UserModel.find({$or: ids}, {password: false, __v: false}).exec(function (err, result) {
+                        if (result != undefined) {
+                            var finalResult = result.filter(function (dy) {
+                                return dy.friends.some(function (element, index, array) {
+                                    return element.status == true && element._id == id;
+                                })
+                            });
+
+                            callback(err, finalResult);
+                        }
+                        else {
+                            callback('has no friend', finalResult);
+                        }
+
+                    });
+                }
+            }
+        });
+    };
+
+/*getMyFriendList('53caa907459f339f28c05685', function (err, result) {
+ console.log(result);
+ });*/
 
 /*updateUser('53c3a21e499dc7c423e90e02', {
  fullname: "Kashish Kumar Gupta"
