@@ -17,6 +17,7 @@
                     <div class="list-group">
 
                         <a ng-repeat="dta in friend.myFriendList" href="#" class="list-group-item">
+                            <img src={{dta.imgurl}} style="height: 50px; width: 50px"/>
                             <span class="badge">{{dta.sex=='M'?'Male':'Female'}}</span>
                             <span class="badge">{{dta.relationship}}</span>
                             <i class="fa fa-user"></i> {{dta.fullname}}
@@ -28,7 +29,6 @@
         </div>
     </div>
 </div>
-
 
 
 <div id="sendFriendRequestModalPopUp" class="modal fade">

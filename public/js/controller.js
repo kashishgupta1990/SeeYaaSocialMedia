@@ -37,6 +37,10 @@ myApp.controller('mainController', ['$scope', '$http', '$location', function ($s
     $scope.master.notification.pendingFriendRequest = [];
 
 
+    $scope.showPicUploadModalPopUp = function () {
+        $('#showPicUploadChange').modal('show');
+    };
+
     $scope.logout = function () {
         console.log('loging out event');
         $scope.resetCookie();

@@ -57,7 +57,7 @@
                     </ul>
                 </div>
             </div>
-            </form>
+        </form>
 
     </nav>
     <!-- /. NAV TOP  -->
@@ -66,7 +66,8 @@
         <div class="sidebar-collapse">
             <ul class="nav" id="main-menu">
                 <li class="text-center">
-                    <img src={{master.usersession.imgurl}} class="user-image img-responsive"/>
+                    <img ng-click="showPicUploadModalPopUp()" src={{master.usersession.imgurl}}
+                         class="user-image img-responsive"/>
                 </li>
 
                 <li>
@@ -134,6 +135,37 @@
         <!-- /. ROW  -->
     </div>
     <!-- /. PAGE INNER  -->
+    <div id="showPicUploadChange" class="modal fade">
+
+        <form role="form" id="uploadForm"
+              enctype="multipart/form-data"
+              action="/profilePicUpload"
+              method="post">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Select Profile Picture To Upload</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <input type="file" id="image" name="image"/>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="form-group">
+                            <input class="btn btn-default" type="submit">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+</div>
+</div>
 </div>
 <!-- /. PAGE WRAPPER  -->
 </div>

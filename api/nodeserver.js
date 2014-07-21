@@ -3,12 +3,13 @@ var db = require('./mongoapi.js'),
     mailSender = require('./BulkMailSend.js'),
     express = require('express'),
     app = express(),
-    path = require('path'),
     fs = require('fs'),
     bodyParser = require('body-parser'),
     keys = require("keygrip")(['a', 'b']),
     cookie = require("cookies").express,
-    async = require('async');
+    async = require('async'),
+    path = require('path'),
+    formidable = require('formidable');
 
 
 app.use(express.static(path.join(__dirname + "/..", "public")));
@@ -115,7 +116,7 @@ app.use('/', function (req, res, next) {
 
         //secured urls
         default :
-           // console.log('Secured API links');
+            // console.log('Secured API links');
             var id = req.cookies.get('_id');
 
             var obj = {};
@@ -146,6 +147,48 @@ app.use('/', function (req, res, next) {
 
 var server = app.get('/', function (req, res) {
     res.send('API HOME');
+});
+
+//Profile Pic Upload
+app.post('/profilePicUpload', function (req, res) {
+    console.log('profilePicUpload Hit');
+
+    var form = new formidable.IncomingForm();
+    form.parse(req, function (err, fields, files) {
+
+        if (files) {
+            var path = files.image.path;
+            console.log(path);
+            var ext = files.image.name.split('.').pop();
+            var filename = req.cookies.get('_id') + "." + ext;
+            console.log(filename);
+            var destinationLocation = require('path').resolve(__dirname, "../public/img");
+
+            console.log(destinationLocation + "/" + filename);
+
+            fs.readFile(path, function (err, data) {
+                fs.writeFile(destinationLocation + "/" + filename, data, function (err) {
+                    if (err) {
+                        console.log(err);
+                        res.send(err);
+                    }
+                    else {
+                        var dbimg = 'img/' + filename;
+                        db.updateUser(req.cookies.get('_id'), {imgurl: dbimg}, function (err, data) {
+                            if(err){
+                                res.send(err);
+                            }
+                            else{
+                                res.redirect('master.html');
+                            }
+                        });
+                    }
+                });
+            });
+        }
+
+    });
+
 });
 
 //SignUp Request Data

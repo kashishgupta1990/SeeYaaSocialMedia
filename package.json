@@ -6,6 +6,7 @@
     "body-parser": "^1.4.3",
     "cookies": "^0.4.1",
     "express": "^4.6.1",
+    "formidable": "^1.0.15",
     "keygrip": "^1.0.1",
     "mongoose": "^3.8.12",
     "nodemailer": "^0.7.1",
